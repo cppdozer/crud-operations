@@ -1,30 +1,33 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "Kumsal11!";
-$dbname = "demoEmp";
+
+function createTable(){
+
+    $servername = "localhost";
+    $username = "root";
+    $password = "PASSWORD";
+    $dbname = "demoEmp";
 
 // Create connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
 
 // Check connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
+    if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
+    }
 
-$tableName = "employees";
+    $tableName = "employees";
 
-$checkTableQuery = "SHOW TABLES LIKE '$tableName'";
-$checkTableResult = mysqli_query($conn, $checkTableQuery);
+    $checkTableQuery = "SHOW TABLES LIKE '$tableName'";
+    $checkTableResult = mysqli_query($conn, $checkTableQuery);
 
-if (!$checkTableResult) {
-    die("Error: " . mysqli_error($conn));
-}
+    if (!$checkTableResult) {
+        die("Error: " . mysqli_error($conn));
+    }
 
-$tableExists = mysqli_num_rows($checkTableResult) > 0;
+    $tableExists = mysqli_num_rows($checkTableResult) > 0;
 
-if (!$tableExists) {
-    $createTableQuery = "
+    if (!$tableExists) {
+        $createTableQuery = "
         CREATE TABLE $tableName (
             id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
             emp_name VARCHAR(100) NOT NULL,
@@ -33,14 +36,17 @@ if (!$tableExists) {
         )
     ";
 
-    if (mysqli_query($conn, $createTableQuery)) {
-        echo "Table created successfully";
+        if (mysqli_query($conn, $createTableQuery)) {
+            echo "Table created successfully";
+        } else {
+            echo "Error creating table: " . mysqli_error($conn);
+        }
     } else {
-        echo "Error creating table: " . mysqli_error($conn);
+        echo "Table already exists";
     }
-} else {
-    echo "Table already exists";
+
+    mysqli_close($conn);
 }
 
-mysqli_close($conn);
+
 ?>
